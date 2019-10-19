@@ -17,14 +17,42 @@ export interface CoursesPageState {
     courses: Course[];
 }
 
-const CoursesPage: React.FC = (props) => {
+export default class CoursesPage extends React.Component<{}, {course: Course;}> {
+    constructor(props: Readonly<{}>) {
+        super(props);
+        this.state = {
+            course: {
+                id: "",
+                title: "",
+                slug: "",
+                authorId: 0,
+                category: ""
+            }
+        };
+    }
 
-    return (
-        <>
-            <h2>Courses</h2>
+    private handleSubmit = (event: React.ChangeEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        alert(this.state.course.title);
+    };
 
-        </>
-    );
-};
+    private handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const course: Course = {
+            ...this.state.course,
+            title: event.target.value
+        };
 
-export default CoursesPage;
+        this.setState({course});
+    };
+
+    render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
+        return (
+            <form onSubmit={this.handleSubmit}>
+                <h2>Courses</h2>
+                <h3>Add Course</h3>
+                <input type="text" onChange={this.handleChange} value={this.state.course.title}/>
+                <input type="submit" value="Save"/>
+            </form>
+        );
+    }
+}
