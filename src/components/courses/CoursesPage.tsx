@@ -1,4 +1,8 @@
 import React from "react";
+import {connect} from "react-redux";
+import {ApplicationState} from "../../redux/reducer/Store";
+import * as courseActions from "../../redux/action/CourseActions";
+import {bindActionCreators} from "redux";
 
 export interface Course {
     id: string;
@@ -15,10 +19,11 @@ export interface Author {
 
 export interface CoursesPageState {
     courses: Course[];
+    actions: typeof courseActions;
 }
 
-export default class CoursesPage extends React.Component<{}, {course: Course;}> {
-    constructor(props: Readonly<{}>) {
+class CoursesPage extends React.Component<CoursesPageState, {course: Course;}> {
+    constructor(props: Readonly<CoursesPageState>) {
         super(props);
         this.state = {
             course: {
@@ -33,7 +38,7 @@ export default class CoursesPage extends React.Component<{}, {course: Course;}> 
 
     private handleSubmit = (event: React.ChangeEvent<HTMLFormElement>) => {
         event.preventDefault();
-        alert(this.state.course.title);
+        this.props.actions.createCourse(this.state.course);
     };
 
     private handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -52,7 +57,26 @@ export default class CoursesPage extends React.Component<{}, {course: Course;}> 
                 <h3>Add Course</h3>
                 <input type="text" onChange={this.handleChange} value={this.state.course.title}/>
                 <input type="submit" value="Save"/>
+                {
+                    this.props.courses.map(x => (
+                        <div key={x.title}>{x.title}</div>
+                    ))
+                }
             </form>
         );
     }
 }
+
+const mapStateToProps = (store: ApplicationState) => {
+    return {
+        courses: store.courses.courses
+    };
+};
+
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        actions: bindActionCreators(courseActions, dispatch)
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CoursesPage);
