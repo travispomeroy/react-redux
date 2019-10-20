@@ -11,6 +11,10 @@ export const coursesReducer: Reducer<CoursesState, CoursesAction> = (state = ini
             return {
                 courses: [...state.courses, {...action.course}]
             };
+        case CourseTypes.LOAD:
+            return {
+                courses: action.courses
+            };
         default:
             return state;
     }

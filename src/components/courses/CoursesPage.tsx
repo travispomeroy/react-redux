@@ -19,6 +19,10 @@ export interface CoursesPageState {
 
 class CoursesPage extends React.Component<CoursesPageState> {
 
+    componentDidMount(): void {
+        this.props.actions.loadCourses();
+    }
+
     render(): React.ReactElement<any, string | React.JSXElementConstructor<any>> | string | number | {} | React.ReactNodeArray | React.ReactPortal | boolean | null | undefined {
         return (
             <>
